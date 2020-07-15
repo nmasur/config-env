@@ -16,7 +16,7 @@ jobs:
       - run: |
           docker run -v "$PWD":/build fredrikfornwall/rust-static-builder:1.44.1
           cd target/x86_64-unknown-linux-musl/release
-          zip config-env.zip config-env
+          sudo zip config-env.zip config-env
 
       - uses: actions/create-release@v1
         env:
