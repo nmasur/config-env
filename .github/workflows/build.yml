@@ -19,6 +19,7 @@ jobs:
           sudo zip config-env.zip config-env
 
       - uses: actions/create-release@v1
+        id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
