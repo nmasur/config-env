@@ -1,0 +1,34 @@
+on:
+  push:
+    paths:
+      - 'src/**'
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  steps:
+    - uses: actions/checkout@master
+
+    - run: |
+        docker run -v "$PWD":/build fredrikfornwall/rust-static-builder:1.44.1
+        cd target/x86_64-unknown-linux-musl/release
+        zip config-env.zip config-env
+
+    - uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./target/x86_64-unknown-linux-musl/release/config-env.zip
+        asset_name: config-env.zip
+        asset_content_type: application/zip
