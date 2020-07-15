@@ -12,18 +12,20 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - run: |
+      - id: compile
+        run: |
           docker run -v "$PWD":/build fredrikfornwall/rust-static-builder:1.44.1
           cd target/x86_64-unknown-linux-musl/release
           sudo zip config-env.zip config-env
+          echo ::set-output name=VERSION::$(cat VERSION)
 
       - uses: actions/create-release@v1
         id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.sha }}
-          release_name: Release ${{ github.sha }}
+          tag_name: ${{ steps.compile.outputs.VERSION }}
+          release_name: Release ${{ steps.compile.outputs.VERSION }}
           draft: false
           prerelease: false
 

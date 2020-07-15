@@ -5,4 +5,4 @@ RUN apk add musl-dev openssl-dev \
 
 COPY . ./
 
-CMD cargo build --release --target x86_64-unknown-linux-musl
+CMD ["./compile.sh"]
