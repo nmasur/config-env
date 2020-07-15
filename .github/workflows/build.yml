@@ -14,18 +14,25 @@ jobs:
 
       - id: compile
         run: |
-          docker run -v "$PWD":/build fredrikfornwall/rust-static-builder:1.44.1
-          cd target/x86_64-unknown-linux-musl/release
-          sudo zip config-env.zip config-env
-          echo ::set-output name=VERSION::$(cat VERSION)
+            docker run -v "$PWD":/build fredrikfornwall/rust-static-builder:1.44.1
+            cd target/x86_64-unknown-linux-musl/release
+            sudo zip config-env.zip config-env
+
+      - uses: actions-rs/install@master
+        with:
+          crate: toml-cli
+
+      - id: version
+        run: |
+            echo ::set-output name=VERSION::$(toml get Cargo.toml package.version | tr -d '"')
 
       - uses: actions/create-release@v1
         id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.compile.outputs.VERSION }}
-          release_name: Release ${{ steps.compile.outputs.VERSION }}
+          tag_name: ${{ steps.version.outputs.VERSION }}
+          release_name: Release ${{ steps.version.outputs.VERSION }}
           draft: false
           prerelease: false
 
