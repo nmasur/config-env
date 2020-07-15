@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Download static binary and unzip
-curl -L https://github.com/nmasur/config-env/releases/download/latest/config-env.zip --output config-env.zip
+curl -L https://github.com/nmasur/config-env/releases/latest/download/config-env.zip --output config-env.zip
 unzip config-env.zip
 rm config-env.zip
 
