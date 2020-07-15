@@ -1,8 +1,7 @@
 on:
   push:
-    paths:
-      - 'src/**'
-      - '.github/**'
+    branches:
+      - master
   pull_request:
     branches:
       - master
